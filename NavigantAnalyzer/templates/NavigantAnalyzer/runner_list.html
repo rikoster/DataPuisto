@@ -1,0 +1,14 @@
+﻿{% block content %}
+  <h1>Runner List</h1>
+  {% if runner_list %}
+  <ul>
+    {% for runner in runner_list %}
+      <li>
+          {{runner.name}} {{runner.first_name}} {{runner.last_name}} {{runner.clubs}}
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no clubs in the library.</p>
+  {% endif %}       
+{% endblock %}

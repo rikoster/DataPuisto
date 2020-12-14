@@ -1,0 +1,43 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+
+{# By Riku - 2018-10-29 #}
+
+<h2>Kirjautuminen</h2>
+
+{# I copied this pattern from the admin module login form #}
+{% if user.is_authenticated %}
+    <p class="message">
+        Olet kirjautunut, mutta tällä tunnuksella ei ole oikeutta
+        poistaa tätä. Haluatko kirjautua toisella tunnuksella?
+    </p>
+{% endif %}
+
+<div class="row">
+    <div id="loginForm">
+        <form action="." method="post" class="loginform">
+            {% csrf_token %}
+            <h4>Käytä Datapuisto -tiliä kirjautumiseen</h4>
+            <hr />
+            <div class="form-group">
+                <label for="id_username" class="control-label">Käyttäjätunnus</label><br/>
+                    {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="id_password" class="control-label">Salasana</label><br/>
+                    {{ form.password }}
+            </div>
+            <div class="form-group">
+                {# I copied this pattern from the admin module login form #}
+                <input type="hidden" name="next" value="{{ next }}" />
+                <input type="submit" value="kirjaudu" />
+                <button type="button" class="cancelbutton" value="peruuta" onclick="history.go(-1)">peruuta</button>
+            </div>
+            {% if form.errors %}
+            <p class="message">Anna oikea käyttäjätunnus ja salasana.</p>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

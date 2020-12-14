@@ -1,0 +1,118 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+{% load datapuisto_extras %}
+
+{# By Riku 2019-04-23 #}
+{# Developed based on race.html #}
+
+<div class="flex-container-race">
+    <div class="header-column">
+        <h2>Strava-yhteenveto</h2>
+        <h3>
+            Vuosi {{ summaryreport.year }}
+            {% if summaryreport.quarter %}, kvartaali {{ summaryreport.quarter }}{% endif %}
+            {% if summaryreport.month %}, kuukausi {{ summaryreport.month }}{% endif %}
+            {% if summaryreport.week %}, viikko {{ summaryreport.week }}{% endif %}
+        </h3>
+    </div>
+    {# In race.html there is an "action-column" here that is used to access settings. #}
+</div>
+
+<div class="race-details">
+    <table>
+
+    {% with columns=summaryreport.summarycolumn_set.all %}
+    {% for table in summaryreport.summarytable_set.all %}
+
+        <tr>
+            <td class="header_2" colspan="2">
+                <a class="greylink" href="{% url 'activities' %}?type={{ table.sport_type }}">{{ table.sport_type }}</a>
+            </td>
+        </tr>
+
+        {# In race.html there is a table here that presents course-specific stats. #}
+        <tr class="summary">
+            <th class="left">Nimi</th>
+            <th>
+                Yhteiskesto
+                {% if table.sport_type != 'Total' %}
+                    <br />Yhteismatka
+                {% endif %}
+            </th>
+            {% for column in columns %}
+                <th>
+                    <a class="greylink" href="{% url 'activities' %}?type={{ table.sport_type }}&start={{ column.dt_start|date:"Y-m-d" }}&end={{ column.dt_end|date:"Y-m-d" }}">
+                        {{ column.period }}
+
+                    </a>
+                    {% if table.sport_type == 'Total' and table.report.summary_type == "W" %}
+                        <br />{{ column.dt_start|date:"j. E" }}
+                    {% endif %}
+                </th>
+            {% endfor %}
+        </tr>
+        {% for row in table.summaryrow_set.all %}
+        <tr class="summary">
+            <td class="summary left strong">
+                <a class="greylink" href="{% url 'activities' %}?type={{ table.sport_type }}&athlete={{ row.athlete.id }}">
+                {{ row.athlete.firstname }} {{ row.athlete.lastname }}
+            </td>
+            <td class="center">
+                {{ row.total_elapsed_time|time_string }}
+                <br />
+                {% if table.sport_type != 'Total' %}
+                {{ row.total_distance|in_km }}
+                {% endif %}
+            </td>
+            {% for cell in row.summarycell_set.all %}
+            
+            <td class="center">
+                {% if cell.rank_time == 1 %}
+                <span class="best_1">
+                {% else %}
+                <span>
+                {% endif %}
+                    <a class="greylink" href="{% url 'activities' %}?type={{ table.sport_type }}&athlete={{ row.athlete.id }}&start={{ cell.dt_start|date:"Y-m-d" }}&end={{ cell.dt_end|date:"Y-m-d" }}">
+                      {% if cell.rank_time %}{{ cell.rank_time }} - {% endif %} 
+                      {{ cell.sum_elapsed_time|time_string }}
+                    </a>
+                </span>
+                <br />
+                {% if table.sport_type != 'Total' %}
+                    {% if cell.rank_distance == 1 %}
+                    <span class="best_2">
+                    {% else %}
+                    <span>
+                    {% endif %}
+                        {% if cell.rank_distance %}{{ cell.rank_distance }} - {% endif %}
+                        {{ cell.sum_distance|in_km }}
+                    </span>
+                {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        <tr class="summary total">
+            <td class="left" colspan="2">
+                Kesto, keskiarvo
+                {% if table.sport_type != 'Total' %}
+                    <br />Matka, keskiarvo
+                {% endif %}
+            </td>
+            {% for coltotal in table.columntotal_set.all %}
+            <td class="center">
+                {{ coltotal.avg_elapsed_time|time_string }}
+                {% if table.sport_type != 'Total' %}
+                    <br />{{ coltotal.avg_distance|in_km }}
+                {% endif %}
+
+            </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    {% endwith %}
+
+    </table>
+</div>
+{% endblock %}

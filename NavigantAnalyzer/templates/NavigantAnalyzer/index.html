@@ -1,0 +1,67 @@
+{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+{% load datapuisto_extras %}
+
+{# By Riku 2018-10-28 #}
+
+{# <h1>Tervetuloa DataPuistoon</h1> #}
+
+<div class="flex-container">
+    <div class="dp-column home">
+        <table class="races">
+          {% for race in races %}
+            <tr class="races">
+                <td class="races">{{ race.serie }}</td>
+                <td class="races"><a href="{{ race.get_absolute_url }}">{{ race.name }}</a></td>
+                <td class="races">{{ race.begin|date:"Y-m-d H:i" }}</td>
+            </tr>
+          {% empty %}
+            <tr class="races"><td class="races">Ei kilpailuja tietokannassa.</td></tr>
+          {% endfor %}
+        </table>
+    </div>
+    <div class="dp-column home">
+        <p>
+        <a href="{% url 'year_races' current_year %}">
+            <img class="icon" src="{% static "img/list.svg"  %}" alt="Kaikki kilpailut" />
+        </a>
+        </p>
+        <p>Kaikki kilpailut</p>
+    </div>
+    <div class="dp-column home">
+        <p>
+        <a href="{% url 'upload_race' %}">
+            <img class="icon" src="{% static "img/upload-db.png"  %}" alt="Uusi kilpailu" />
+        </a>
+        </p>
+        <p>Uusi kilpailu</p>
+    </div>
+    <div class="dp-column home">
+        <p>
+            <a href="{% url 'puistoserie' current_puistoserie.id %}">
+                <img class="icon" src="{% static "img/podium.svg"  %}" alt="Puistosarja" />
+            </a>
+        </p>
+        <p>Puistosarja</p>
+    </div>
+    <div class="dp-column home">
+        <p>
+        <a href="{% url 'strava_views' %}">
+            <img class="icon" src="{% static "img/statistics.svg"  %}" alt="Strava" />
+        </a>
+        </p>
+        <p>Strava</p>
+    </div>
+    {% if user.is_authenticated %}
+    <div class="dp-column home">
+        <p>
+        <a href="{% url 'user_settings' %}">
+            <img class="icon" src="{% static "img/settings.svg"  %}" alt="Kayttaja-asetukset" />
+        </a>
+        </p>
+        <p>Kayttaja</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

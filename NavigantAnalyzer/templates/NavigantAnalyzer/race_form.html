@@ -1,0 +1,26 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+
+{# By Riku 2020-10-08 #}
+
+<h1>Päivitä kilpailu tuoreella tilanteella</h1>
+<h2>{{ race }}</h2>
+<p>Tuonut tietokantaan: {{ race.uploaded_by.get_username }}</p>
+<p>Tuontipäivä: {{ race.upload_time }}</p>
+{% if message %}
+    <p class="message">{{ message }}</p>
+{% endif %}
+<div id="RaceForm" class="formdiv">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <input type="submit" value="Päivitä" />
+            <button type="button" class="cancelbutton" value="peruuta" onclick="history.go(-1)">peruuta</button>
+        </p>
+    </form>
+</div>
+<p class="note">Normaalitapauksessa paina vain PÄIVITÄ -nappia,
+Url-kentän sisältöä ei tarvitse muuttaa.</p>
+{% endblock %}

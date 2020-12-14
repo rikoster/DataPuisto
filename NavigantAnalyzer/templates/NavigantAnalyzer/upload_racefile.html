@@ -1,0 +1,40 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+
+{# By Riku - 2018-10-28 #}
+
+<h1>Kilpailun lataus tietokantaan tiedostosta</h1>
+    {# List of uploaded documents #}
+    <h3>Aikaisemmin ladatut:</h3>
+    <table class="races">
+        {% for race in races %}
+        <tr class="races">
+            <td class="races">{{ race.serie }}</td>
+            <td class="races"><a href="{{ race.get_absolute_url }}">{{ race.name }}</a></td>
+            <td class="races">{{ race.begin|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr class="races"><td class="races">Ei kilpailuja tietokannassa.</td></tr>
+        {% endfor %}
+    </table>
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+    <!-- Upload form -->
+    <div id="UploadForm" class="formdiv">
+        <form action="{% url 'upload_racefile' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+            <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>
+            <p>
+                {{ form.file.errors }}
+                {{ form.file }}
+            </p>
+            <p></p><input type="submit" value="Vie" />
+            <button type="button" class="cancelbutton" value="peruuta" onclick="history.go(-1)">peruuta</button>
+            </p>
+        </form>
+    </div>
+    <p class="note">Jos haluat ladata Navigant API:lla tietokantaan, 
+    <a href="{% url 'upload_race' %}">klikkaa tästä</a></p>
+{% endblock %}

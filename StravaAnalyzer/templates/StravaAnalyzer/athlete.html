@@ -1,0 +1,55 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+
+{# By Riku 2019-04-24 #}
+
+<div>
+    <h2>Strava-urheilija DataPuistossa</h2>
+    <img class="icon" src={{ athlete.profile }} alt="Profiilikuva" />
+    <h3>{{ athlete.firstname }} {{ athlete.lastname }}</h3>
+</div>
+<div>
+    <table class="profile large">
+        <tr class="profile large">
+            <th class="profile large">id:</th>
+            <td class="profile large">{{ athlete.id }}</td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">username:</th>
+            <td class="profile large">{{ athlete.username }}</td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">firstname:</th>
+            <td class="profile large">{{ athlete.firstname }}</td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">lastname:</th>
+            <td class="profile large">{{ athlete.lastname }}</td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">city:</th>
+            <td class="profile large">{{ athlete.city }}</td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">country:</th>
+            <td class="profile large">{{ athlete.country }}</td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">sex:</th>
+            <td class="profile large">{{ athlete.sex }}</td>
+        </tr>
+    </table>
+    <h4>Tietosi päivittyvät Datapuiston Strava-vertailuun vuorokauden sisällä.</h4>
+    <p class="profile large">
+        Saat WhatsAppiin Datapuisto-käyttäjätunnuksen, jos sinulla ei ole vielä sitä.
+    </p>
+    <!--
+    {# <form action="{% url 'fetch_activities' %}" method="get"> #}
+        <h3>Haluatko viedä Strava-aktiviteettisi tietokantaan heti?</h3>
+        <p>(tämä voi kestää muutaman minuutin, älä keskeytä)</p>
+        <input type="submit" value="vahvista" />
+    </form>
+        -->
+</div>
+
+{% endblock %}

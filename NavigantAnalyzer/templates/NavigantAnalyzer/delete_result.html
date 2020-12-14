@@ -1,0 +1,14 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+
+{# By Riku - 2018-10-28 #}
+
+<form action="{% url 'delete_result' result.id %}" method="post">
+    {% csrf_token %}
+    <h1>Haluatko poistaa tuloksen?</h1>
+    <h2>{{ result }}</h2>
+    <input type="submit" value="vahvista" />
+    <button type="button" class="cancelbutton" value="peruuta" onclick="history.go(-1)">peruuta</button>
+</form>
+
+{% endblock %}

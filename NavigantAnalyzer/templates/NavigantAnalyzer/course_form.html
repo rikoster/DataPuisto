@@ -1,0 +1,24 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+
+{# By Riku 2019-11-28 #}
+
+<h1>Linkitä kilpailu Puistosarjaan</h1>
+<h2>{{ course }}</h2>
+<p>Tuonut tietokantaan: {{ course.race.uploaded_by.get_username }}</p>
+<p>Tuontipäivä: {{ course.race.upload_time }}</p>
+{% if message %}
+    <p class="message">{{ message }}</p>
+{% endif %}
+<div id="PuistoserieForm" class="formdiv">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <input type="submit" value="Valitse" />
+            <button type="button" class="cancelbutton" value="peruuta" onclick="history.go(-1)">peruuta</button>
+        </p>
+    </form>
+</div>
+{% endblock %}

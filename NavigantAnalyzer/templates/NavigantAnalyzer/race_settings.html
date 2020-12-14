@@ -1,0 +1,35 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+
+{# By Riku 2018-10-28 #}
+
+<div class="flex-container-race">
+    <div class="header-column">
+        <h2>{{ race }}</h2>
+        <p>Tuonut tietokantaan: {{ race.uploaded_by.get_username }}</p>
+        <p>Tuontipäivä: {{ race.upload_time }}</p>
+    </div>
+    <div class="action-column">
+        <p>
+        <a href="javascript:history.go(-1)">
+            <img class="icon margin_20" src="{% static "img/previous.svg"  %}" alt="Palaa" />
+        </a>
+        </p>
+    </div>
+    <div class="action-column">
+        <p>
+        <a href="{% url 'update_race' race.id %}">
+            <img class="icon margin_20" src="{% static "img/update-arrows.svg"  %}" alt="Päivitä" />
+        </a>
+        </p>
+    </div>
+    <div class="action-column">
+        <p>
+        <a href="{% url 'delete_race' race.id %}">
+            <img class="icon margin_20" src="{% static "img/delete.svg"  %}" alt="Poista tietokannasta" />
+        </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

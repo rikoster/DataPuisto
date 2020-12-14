@@ -1,0 +1,617 @@
+/** {
+    box-sizing: border-box;
+}*/
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
+    font-weight: 300;
+}
+
+h1 {
+    /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+    font-weight: 700;
+    color: black;
+}
+
+h2 {
+    font-weight: 700;
+}
+
+table {
+    border-spacing: 0;
+}
+
+a.greylink {
+    color: darkslategrey;
+}
+.navbar {
+    /*background-color: #004b00;*/
+    background-color: #387824;
+    font-variant: small-caps;
+    color: white;
+    padding: 8px 5px 8px 15px;
+}
+
+    .navbar a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+.navbar-icon {
+    vertical-align: -70%;
+    height: 50px;
+    width: auto;
+}
+.navbar-brand {
+    font-size: 1.7em;
+    letter-spacing: 3px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    font-weight: 900;
+}
+
+.navbar-item {
+    font-size: 1.3em;
+    letter-spacing: 1px;
+    margin-left: 40px;
+    margin-bottom: 5px;
+}
+
+.navbar-item:hover {
+    background-color: #408830;
+}
+
+/*footer {
+    padding-top: 20%;
+    background-image: url(/static/img/OC_puisto_bg.svg);
+    background-size: cover;
+}*/
+
+.canvas {
+    width: 100%;
+    height: auto;
+}
+.copyright {
+    font-size: small;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding: 10px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    /* max-width: 350px; */
+}
+
+input#id_url {
+    /* min-width: 300px; */
+    min-width: 90%;
+}
+    /* Formatting on the Submit buttons */
+    input[type=submit] {
+        display: inline-block;
+        padding: 0.7em 1.4em;
+        margin: 0 0.7em 0.3em 0;
+        border-radius: 0.15em;
+        box-sizing: border-box;
+        font-family: 'Source Sans Pro', sans-serif;
+        text-transform: uppercase;
+        font-weight: 400;
+        color: white;
+        background-color: #004b00;
+        box-shadow: inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+    }
+    /* Formatting on the Cancel buttons */
+.cancelbutton {
+    display: inline-block;
+    padding: 0.7em 1.4em;
+    margin: 0 0.7em 0.3em 0;
+    border-radius: 0.15em;
+    box-sizing: border-box;
+    font-family: 'Source Sans Pro', sans-serif;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: black;
+    background-color: lightgrey;
+    box-shadow: inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.12);
+}
+
+.yearbutton {
+    display: inline-block;
+    padding: 0.7em 1.4em;
+    margin: 1.5em 2em 0.2em 2em;
+    border-radius: 1em;
+    box-sizing: border-box;
+    font-family: 'Source Sans Pro', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: black;
+    background-color: whitesmoke;
+    box-shadow: inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.12);
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.flex-container-race {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-container-course {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.dp-column {
+    margin: 2em;
+    padding: 2em;
+    border-style: solid;
+    border-color: lightgrey;
+    border-width: thin;
+    box-shadow: 0.4em 0.4em 0 rgba(0,0,0,0.17);
+    background-color: white;
+}
+
+.home {
+    text-align: center;
+    min-height: 8em;
+}
+
+.password-change {
+    text-align: left;
+    min-height: 11em;
+    max-width: 400px;
+}
+
+.action-column {
+    padding: 0.5vw;
+    text-align: center;
+}
+
+.icon {
+    height: 50px;
+    width: auto;
+}
+
+.small-icon {
+    height: 35px;
+    width: auto;
+}
+
+.navbar-icon {
+    height: 50px;
+    width: auto;
+}
+
+
+.margin_20 {
+    margin: 20px;
+}
+
+.races {
+    border-color: grey;
+    text-align: left;
+    padding: 2px 4px 2px 4px;
+}
+
+.header_2 {
+    padding: 2em 0 0 0;
+    font-size: 1.4em;
+    font-weight: 700;
+    height: 4em;
+    width: 4em;
+    text-align: left;
+}
+
+.header_3 {
+    padding: 1em 0 1em 0;
+    font-size: larger;
+}
+
+.api {
+    font-size: small;
+    vertical-align: text-bottom;
+}
+
+.course tr td {
+    padding: 0.5em;
+}
+
+.results tr th {
+    text-align: center;
+    padding: 0.3em;
+}
+
+td.main {
+    text-align: center;
+    padding: 0.5em;
+}
+
+td.detail {
+    text-align: center;
+    padding: 0.3em;
+    min-width: 4.0em;
+}
+
+.puistoman td {
+    background-color: whitesmoke;
+}
+
+.profile {
+    padding: 4px;
+    text-align: left;
+}
+
+.summary {
+    font-size: 1em;
+}
+
+    .summary td, th {
+        padding: 0.5em;
+        height: 2.8em;
+        width: 6.6em;
+    }
+
+    .summary th {
+        border-bottom: 1px solid grey;
+    }
+
+.puistoserie {
+    font-size: 1em;
+}
+
+    .puistoserie td {
+        padding: 0.4em;
+        height: 2.2em;
+    }
+
+    .puistoserie th {
+        padding: 0.4em;
+        height: 4.0em;
+        border-bottom: 1px solid grey;
+    }
+
+.ps-narrow {
+    width: 2em;
+    text-align: center;
+}
+
+.ps-normal {
+    width: 4.5em;
+    text-align: center;
+}
+
+.ps-wide {
+    width: 7.5em;
+    text-align: left;
+}
+
+.total {
+    font-style: italic;
+}
+    .total td {
+        border-top: 1px solid grey;
+    }
+
+.activities {
+    font-size: 1em;
+}
+
+    .activities td,th {
+        padding: 0.4em;
+        height: 2.3em;
+    }
+
+    .activities th {
+        border-bottom: 1px solid grey;
+    }
+
+.center {
+    text-align: center;
+}
+
+.left {
+    text-align: left;
+}
+
+.strong {
+    font-weight: 700;
+}
+
+.left.summary {
+    font-size: 1em;
+    width: 8em;
+}
+
+.pagination td {
+    font-size: 1.2em;
+    padding: 0.8em;
+    height: 4em;
+    width: 8em;
+    border-top: 1px solid grey;
+}
+
+@media only screen and (max-width: 1400px) {
+    .dp-column {
+        margin: 2vw;
+        padding: 2vw;
+        border-style: solid;
+        border-color: lightgrey;
+        border-width: thin;
+        box-shadow: 0.4vw 0.4vw 0 rgba(0,0,0,0.17);
+        background-color: white;
+    }
+    
+    .course tr td {
+        padding: 0.5vw;
+    }
+
+    .results tr th {
+        text-align: center;
+        padding: 0.3vw;
+    }
+
+    td.main {
+        text-align: center;
+        padding: 0.5vw;
+    }
+
+    td.detail {
+        text-align: center;
+        padding: 0.3vw;
+        min-width: 4.0vw;
+    }
+
+    .main {
+        font-size: 1.2vw;
+    }
+    
+    .detail {
+        font-size: 1vw;
+    }
+
+}
+
+@media only screen and (max-width: 1100px) {
+    .main {
+        font-size: 1.4vw;
+    }
+
+    .detail {
+        font-size: 1vw;
+    }
+
+    .header_2 {
+        padding: 2em 0 0 0;
+        font-size: 2vw;
+        font-weight: 700;
+        height: 8vw;
+        width: 8vw;
+        text-align: left;
+    }
+
+    .summary {
+        font-size: 1.5vw;
+    }
+
+        .summary td, th {
+            padding: 0.5vw;
+            height: 4vw;
+            width: 10vw;
+        }
+
+    .left.summary {
+        width: 12vw;
+    }
+
+    .puistoserie {
+        font-size: 1.4vw;
+    }
+
+        .puistoserie td {
+            padding: 0.6vw;
+            height: 3.2vw;
+        }
+
+        .puistoserie th {
+            padding: 0.6vw;
+            height: 5.5vw;
+        }
+
+    .ps-narrow {
+        width: 3vw;
+        text-align: center;
+    }
+
+    .ps-normal {
+        width: 6.6vw;
+        text-align: center;
+    }
+
+    .ps-wide {
+        width: 10vw;
+        text-align: left;
+    }
+    .activities {
+        font-size: 1.4vw;
+    }
+
+        .activities td, th {
+            padding: 0.6vw;
+            height: 3vw;
+        }
+
+    .pagination td {
+        font-size: 1.7vw;
+        padding: 1.2vw;
+        height: 6vw;
+        width: 12vw;
+        border-top: 1px solid grey;
+    }
+
+}
+
+
+@media only screen and (max-width: 800px) {
+    body {
+        font-size: 2vw;
+    }
+
+    .navbar-brand {
+        font-size: 4vw;
+        letter-spacing: 0.3vw;
+        margin-left: 1.7vw;
+        margin-bottom: 0.3vw;
+    }
+
+    .navbar-item {
+        font-size: 2.5vw;
+        letter-spacing: 0.2vw;
+        margin-left: 3.5vw;
+        margin-bottom: 0.3vw;
+    }
+    
+    .navbar-icon {
+        height: 6vw;
+        width: auto;
+    }
+    .main {
+        font-size: 1.6vw;
+    }
+
+    .detail {
+        font-size: 1vw;
+    }
+
+    .icon {
+        height: 6vw;
+        width: auto;
+    }
+
+    .small-icon {
+        height: 3.5vw;
+        width: auto;
+    }
+}
+
+table .results {
+    max-width: 100%;
+}
+
+.best td {
+    background-color: palegreen;
+}
+
+.best_1 {
+    font-weight: 800;
+}
+
+.best_2 {
+    color: forestgreen;
+    font-weight: 800;
+}
+
+.cstats {
+    font-style: italic;
+    padding: 0.3em;
+}
+
+.cstats-r.main {
+    text-align: right;
+    padding-right: 20px;
+}
+
+.dropdown {
+    /* box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2); */
+    background-color: whitesmoke;
+    border-color: darkgrey;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600
+}
+
+.message,
+.errorlist.nonfield {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: orangered;
+}
+
+
+.note {
+    font-style: italic;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.formdiv {
+    margin: 10px;
+    padding: 10px 20px 10px 20px;
+    max-width: 480px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: lightgrey;
+}
+
+.form-group {
+    padding: 8px;
+}
+
+@media only screen and (max-width: 600px) {
+
+    body {
+        font-size: 11px;
+    }
+
+    .races {
+        font-size: 11px;
+    }
+
+    .header_3 {
+        font-size: 13px;
+    }
+
+    .copyright {
+        font-size: 9px;
+    }
+
+    .icon {
+        height: 35px;
+        width: auto;
+    }
+
+    .small-icon {
+        height: 25px;
+        width: auto;
+    }
+
+    .navbar-icon {
+        height: 35px;
+        width: auto;
+    }
+
+    /* Set width on the form input elements since they're 100% wide by default */
+    input,
+    select,
+    textarea {
+        max-width: 280px;
+    }
+
+}

@@ -1,0 +1,246 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+{% load datapuisto_extras %}
+
+{# I need to write a lot of comments. This is to remember the syntax. #}
+
+<div class="flex-container-race">
+    <div class="header-column">
+        <h2>{{ race.serie }} - {{ race.name }}</h2>
+        <h3>{{ race.begin|date:"Y-m-d H:i" }}</h3>
+    </div>
+    {# By Riku 2019-11-28 #}
+    <div class="action-column">
+        <p>
+            {% comment %}
+            The javascript snippet below is developed based on many inspirations by Riku
+            https://www.sitepoint.com/community/t/select-drop-downs-refresh-page-onchange/1729
+            {% endcomment %}
+            <select class="dropdown" onchange="self.location=self.location.href.split('?')[0]+'?viewmode='+this.selectedIndex">
+                <option {% if viewmode == "0" %}selected="selected"{% endif %}>
+                    Normaalivertailu</option>
+                <option {% if viewmode == "1" %}selected="selected"{% endif %}>
+                    Leader-vertailu 1</option>
+                <option {% if viewmode == "2" %}selected="selected"{% endif %}>
+                    Leader-vertailu 2</option>
+                <option {% if viewmode == "3" %}selected="selected"{% endif %}>
+                    Puistoman-vertailu 1</option>
+                <option {% if viewmode == "4" %}selected="selected"{% endif %}>
+                    Puistoman-vertailu 2</option>
+            </select>
+        </p>
+    </div>
+    <div class="action-column">
+        <p>
+            <a href="{% url 'race_settings' race.id %}">
+                <img class="icon" src="{% static "img/settings.svg"  %}" alt="Asetukset" />
+            </a>
+        </p>
+    </div>
+</div>
+
+{% for course in race.course_set.all %}
+    <div class="flex-container-course">
+        <div class="action-column">
+            <h4>
+                {{course.name}}
+                {% if course.length %}({{course.length}} m){% endif %}
+            </h4>
+        </div>
+        {# By Riku 2019-11-28 #}
+        <div class="action-column">
+            <p>
+                <a href="{% url 'update_course' course.id %}">
+                    <img class="small-icon" src="{% static "img/report.svg"  %}" alt="Puistosarja" />
+                </a>
+            </p>
+        </div>
+        <div class="action-column">
+            <p class="main">Puistosarja</p>
+        </div>
+    </div>
+    <div class="race-details">
+        <table class="course main">
+            {% if course.num_participants %}
+            <tr>
+                <td>Osallistujamäärä</td>
+                <td>{{ course.num_participants }}</td>
+            </tr>
+            {% endif %}
+            {# By Riku 2019-11-28 #}
+            {% if course.puistoman_time %}
+            <tr>
+                <td>PuistoManin aika</td>
+                <td>{{ course.puistoman_time|time_string }}</td>
+            </tr>
+            {% endif %}
+            {% if course.min_puistotime %}
+            <tr>
+                <td>Radan nopein aika (Puisto)</td>
+                <td>{{ course.min_puistotime|time_string }}</td>
+                <td>&nbsp;</td>
+                <td>Radan nopein aika</td>
+                <td>{{ course.min_time|time_string }}</td>
+            </tr>
+            {% endif %}
+            {% if course.mean_puistotime %}
+            <tr>
+                <td>Radan keskiaika (Puisto)</td>
+                <td>{{ course.mean_puistotime|time_string }}</td>
+                <td>&nbsp;</td>
+                <td>Radan keskiaika</td>
+                <td>{{ course.mean_time|time_string }}</td>
+            </tr>
+            {% endif %}
+        </table>
+        {% with course_controls=course.coursecontrols_set.all %}
+        <table class="results">
+            {% if course.result_set.count > 0 %}
+            <tr>
+                <th class="main">Puisto-sijoitus</th>
+                {% if viewmode == "0" %} {# Normal comparison #}
+                <th class="main">Sijoitus</th>
+                {% else %}
+                <th class="main">Taso</th>
+                {% endif %}
+                <th class="main">Nimi</th>
+                <th class="main">Aika</th>
+                {% for c in course_controls %}
+                <th class="detail">{{ forloop.counter }}</th>
+                {% endfor %}
+            </tr>
+            {# ----- The extra line for PuistoMan result ----- #}
+            {% if viewmode == "3" or viewmode == "4" %}
+            <tr class="puistoman">
+                <td class="main">0.</td>
+                <td class="main">100%</td>
+                <td class="main">PuistoMan</td>
+                <td class="main strong">
+                        {{ course.puistoman_time|time_string }}
+                </td>
+                {% for stat in course_controls %}
+                <td class="detail">
+                    {{ stat.puistoman_time|time_string }}<br />
+                    {{ stat.leg_min_puistotime|time_string }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endif %}
+
+            {% for result in course.result_set.all %}
+            <tr>
+                <td class="main">{{ result.puistoposition|default_if_none:"-" }}.</td>
+                <td class="main">
+                    {% if viewmode == "0" %} {# Normal comparison #}
+                    {{ result.position|default_if_none:"-" }}.
+                    {% elif viewmode == "1" or viewmode == "2" %} {# Leader comparison #}
+                    {{ result.puistoperc_time_l|perc_string }}
+                    {% else %} {# PuistoMan comparison #}
+                    {{ result.puisto_max_level|perc_string }} <br />
+                    {{ result.puistoperc_time_pm|perc_string }}
+                    {% endif %}
+                </td>
+                <td class="main">{{ result.name }}</td>
+                <td class="main strong">
+                    <a href="{{ result.get_absolute_url }}">
+                        {{ result.time|time_string }}
+                    </a>
+                </td>
+                {% for visit in result.visit_set.all %}
+                    <td class="detail">
+                        {% if visit.puistoposition == 1 %}
+                        <span class="best_1">
+                        {% else %}
+                        <span>
+                        {% endif %}
+                        {{ visit.time|time_string }}</span><br />
+
+                        {% if viewmode == "2" %} {# Leader 2 comparison #}
+                        {{ visit.puistodiff_time_l|time_string }}<br />
+                        {% elif viewmode == "4" %} {# PuistoMan 2 comparison #}
+                        {{ visit.puistodiff_time_pm|time_string }}<br />
+                        {% endif %}
+                        
+                        {% if viewmode == "0" %} {# Normal comparison #}
+                        ({{ visit.puistoposition|default_if_none:"-" }}./
+                        {{ visit.position|default_if_none:"-" }}.)<br />
+                        {% else %} {# Other comparisons #}
+                        {{ visit.puistoposition|default_if_none:"-" }}.<br />
+                        {% endif %}
+
+                        {% if visit.leg_puistoposition == 1 %}
+                        <span class="best_2">
+                        {% else %}
+                        <span>
+                        {% endif %}                        
+                        {{ visit.leg_time|time_string }}</span><br />
+                        
+                        {% if viewmode == "0" %} {# Normal comparison #}
+                        ({{ visit.leg_puistoposition|default_if_none:"-" }}./
+                        {{ visit.leg_position|default_if_none:"-" }}.)
+                        {% elif viewmode == "1" %} {# Leader 1 comparison #}
+                        {{ visit.leg_puistoposition|default_if_none:"-" }}. <br />
+                        {{ visit.leg_puistoperc_time_l|perc_string }}
+                        {% elif viewmode == "2" %} {# Leader 2 comparison #}
+                        {{ visit.leg_puistodiff_time_l|time_string }}
+                        {% elif viewmode == "3" %} {# Puistoman 1 comparison #}
+                        {{ visit.leg_puistoposition|default_if_none:"-" }}. <br />
+                        {{ visit.leg_puistoperc_time_pm|perc_string }}
+                        {% elif viewmode == "4" %} {# Puistoman 2 comparison #}
+                        {{ visit.leg_puistodiff_time_pm|time_string }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            <tr class="cstats">
+                <td colspan=4 class="cstats-r main">Koodi</td>
+                {% for stat in course_controls %}
+                <td class="detail">{{ stat.code }}</td>
+                {% endfor %}
+            </tr>
+            {% if not viewmode == "3" and not viewmode == "4" %}
+            <tr class="cstats">
+                <td colspan=4 class="cstats-r main">Reitin/osuuden nopein aika (Puisto)</td>
+                {% for stat in course_controls %}
+                <td class="detail">
+                    {{ stat.min_puistotime|time_string }}<br />
+                    {{ stat.leg_min_puistotime|time_string }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endif %}
+            <tr class="cstats">
+                <td colspan=4 class="cstats-r main">Reitin/osuuden nopein aika</td>
+                {% for stat in course_controls %}
+                <td class="detail">
+                    {{ stat.min_time|time_string }}<br />
+                    {{ stat.leg_min_time|time_string }}
+                </td>
+                {% endfor %}
+            </tr>
+            <tr class="cstats">
+                <td colspan=4 class="cstats-r main">Reitin/osuuden keskiaika (Puisto)</td>
+                {% for stat in course_controls %}
+                <td class="detail">
+                    {{ stat.mean_puistotime|time_string }}<br />
+                    {{ stat.leg_mean_puistotime|time_string }}
+                </td>
+                {% endfor %}
+            </tr>
+            <tr class="cstats">
+                <td colspan=4 class="cstats-r main">Reitin/osuuden keskiaika</td>
+                {% for stat in course_controls %}
+                <td class="detail">
+                    {{ stat.mean_time|time_string }}<br />
+                    {{ stat.leg_mean_time|time_string }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endif %}
+        </table>
+        {% endwith %}
+    </div>
+{% endfor %}
+{% endblock %}

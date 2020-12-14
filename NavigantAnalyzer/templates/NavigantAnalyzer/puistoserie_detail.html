@@ -1,0 +1,97 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+{% load datapuisto_extras %}
+
+{# By Riku 2019-11-28 #}
+{# Developed based on summaryreport.html #}
+
+<div class="flex-container-race">
+    <div class="header-column">
+        <h2>{{ puistoserie.name }}</h2>
+    </div>
+    {# By Riku 2020-11-17 #}
+    <div class="action-column">
+        <p>
+            {% comment %}
+            The javascript snippet below is copied and adapted from race.html
+            {% endcomment %}
+            <select class="dropdown" onchange="self.location=self.location.href.split('?')[0]+'?viewmode='+this.selectedIndex">
+                <option {% if viewmode == "0" %}selected="selected"{% endif %}>
+                    Normaali</option>
+                <option {% if viewmode == "1" %}selected="selected"{% endif %}>
+                    Ilman huonointa</option>
+            </select>
+        </p>
+    </div>
+    {# In race.html there is an "action-column" here that is used to access settings. #}
+</div>
+
+<div class="race-details">
+     <table>
+
+        {# In race.html there is a table here that presents course-specific stats. #}
+
+       <tr class="puistoserie">
+            <th class="ps-narrow">#</th>
+            <th class="ps-wide">Nimi</th>
+            <th class="ps-normal">Yhteispisteet</th>
+            {% for course in courses %}
+            <th class="ps-normal">
+                <a class="greylink" href="{{ course.race.get_absolute_url }}">
+                    {{ course.race.name }}<br />
+                    {{ course.race.begin|date:"d.m."}}
+                </a>
+            </th>
+            {% endfor %}
+        </tr>
+        {% for serie_entry in seriescores %}
+        <tr class="puistoserie">
+            <td class="ps-narrow">
+                {% if viewmode == "0" %}
+                {{ serie_entry.position }}.
+                {% else %}
+                {{ serie_entry.position_alt }}.
+                {% endif %}
+            </td>
+            <td class="ps-wide">
+                {{ serie_entry.runner.name }}
+            </td>
+            <td class="ps-normal strong">
+                {% if viewmode == "0" %}
+                {{ serie_entry.score|default_if_none:"-" }}
+                {% else %}
+                {{ serie_entry.score_alt|default_if_none:"-" }}
+                {% endif %}
+            </td>
+            {% for course_entry in serie_entry.puistocoursescore_set.all %}
+            <td class="ps-normal">
+                {{ course_entry.score|default_if_none:"-" }}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+        {# Summary row for future expansion. #}
+        <tr class="total">
+            <td class="left" colspan="3">&nbsp;</td>
+            {% for course in courses %}
+            <td class="ps-normal">&nbsp;</td>
+            {% endfor %}
+        </tr>
+
+    </table>
+</div>
+<div class="flex-container">
+    <h3>Puistosarjat</h3>
+    <ul>
+        {% for serie in all_series %}
+        <li class="puistoserie">
+            <a href="{% url 'puistoserie' serie.id %}">{{ serie.name }}</a>
+        </li>
+        {% empty %}
+        <p class="puistoserie">Ei puistosarjoja tietokannassa.</p>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

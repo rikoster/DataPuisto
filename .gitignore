@@ -1,0 +1,27 @@
+# Python Tools for Visual Studio (PTVS)
+__pycache__/
+*.pyc
+# Visual Studio not used anymore, dp.pyproj not up-to-date anymore
+dp.pyproj
+# No reason to include the python library files
+/env
+# No reason to include the static admin files (from Django)
+/static/admin
+# No reason to include dp-online production files
+/static/dp-online
+# No reason to include the uploads
+/uploads
+# No reason to include log files
+/log
+# For confidentiality reasons, keep db.sqlite3 private
+db.sqlite3
+# All the .json files in the source root are temporary
+*.json
+# Clean the repo, take Jupyter Notebooks out
+*.ipynb
+/.ipynb_checkpoints
+# No passwords etc to GitHub
+.env.example
+.env
+/DataPuisto/da_settings.py
+/DataPuisto/settings-old.py

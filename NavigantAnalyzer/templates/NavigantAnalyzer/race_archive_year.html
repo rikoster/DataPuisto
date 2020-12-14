@@ -1,0 +1,41 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+
+{# By Riku 2018-10-28 #}
+
+<div>
+    {% with p_year=previous_year|date:"Y" %}
+        {% if p_year|length_is:"4" %}
+            <a href="{% url 'year_races' p_year %}">
+                <button type="button" class="yearbutton" value="mene">{{ p_year }}</button>
+            </a>
+        {% endif %}
+    {% endwith %}
+    {% with n_year=next_year|date:"Y" %}
+        {% if n_year|length_is:"4" %}
+            <a href="{% url 'year_races' n_year %}">
+                <button type="button" class="yearbutton" value="mene">{{ n_year }}</button>
+            </a>
+        {% endif %}
+    {% endwith %}
+    <h2>Kaikki kilpailut vuonna {{ year|date:"Y" }}</h2>
+
+    {# 'month' defined in the Race model as DateTime property. #}
+    {% regroup object_list by month as month_list %}
+    <table class="races">
+        {% for month, month_races in month_list %}
+            <tr class="races"><th colspan=5 class="races header_3">{{ month|date:"F" }}</th></tr>
+                {% for race in month_races %}
+                    <tr class="races">
+                        <td class="races">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td class="races">{{ race.serie }}</td>
+                        <td class="races"><a href="{{ race.get_absolute_url }}">{{ race.name }}</a></td>
+                        <td class="races">{{ race.begin|date:"Y-m-d H:i" }}</td>
+                        <td class="races api"><a href="{{ race.get_api_url }}">flat-JSON</a></td>
+                    </tr>
+                {% endfor %}
+        {% endfor %}
+    </table>
+    <p>&nbsp;</p>
+</div>
+{% endblock %}

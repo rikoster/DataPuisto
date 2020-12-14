@@ -1,0 +1,159 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+{% load datapuisto_extras %}
+
+{# By Riku - I need to write a lot of comments. This is to remember the syntax. #}
+
+<div class="flex-container-race">
+    <div class="header-column">
+        <h2>{{ result.name }} ({{ result.course.race.serie }} - {{ result.course.race.name }})</h2>
+        <h3>{{ result.course.race.begin|date:"Y-m-d H:i" }}</h3>
+    </div>
+    <div class="action-column">
+        <p>
+            {% comment %}
+            The javascript snippet below is developed based on many inspirations by Riku
+            https://www.sitepoint.com/community/t/select-drop-downs-refresh-page-onchange/1729
+            {% endcomment %}
+            <select class="dropdown" onchange="self.location=self.location.href.split('?')[0]+'?viewmode='+this.selectedIndex">
+                <option {% if viewmode == "0" %}selected="selected"{% endif %}>
+                    Normaalivertailu</option>
+                <option {% if viewmode == "1" %}selected="selected"{% endif %}>
+                    Puisto-vertailu</option>
+            </select>
+        </p>
+    </div>
+    <div class="action-column">
+        <p>
+            <a href="{% url 'result_settings' result.id %}">
+                <img class="icon" src="{% static "img/settings.svg" %}" alt="Asetukset" />
+            </a>
+        </p>
+    </div>
+</div>
+<div class="race-details">
+    <h4>{{result.course.name}}
+        {% if result.course.length %}({{result.course.length}} m){% endif %}
+    </h4>
+    {% with course_controls=result.course.coursecontrols_set.all %}
+        <table class="course main">
+            <tr>
+                <td>Puistosijoitus</td>
+                <td>{{ result.puistoposition }}</td>
+                <td>Maksimitaso</td>
+                <td>{{ result.puisto_max_level|perc_string }}</td>
+                <td>Optimi</td>
+                <td>{{ result.puisto_optimum|time_string }}</td>
+            </tr>
+            <tr>
+                <td>Sijoitus</td>
+                <td>{{ result.position }}</td>
+                <td>Onnistuminen</td>
+                <td>{{ result.puisto_success|perc_string }}</td>
+                <td>Virheet</td>
+                <td>{{ result.puisto_mistakes|time_string }}</td>
+            </tr>
+            <tr>
+                <td>Aika</td>
+                <td><strong>{{ result.time|time_string }}</strong></td>
+            </tr>
+        </table>
+        <table class="results">
+            <tr class="results">
+                <th class="main">#</th>
+                {% if viewmode == "0" %}
+                <th class="main">Koodi</th>
+                {% endif %}
+                <th class="main">Kum. aika</th>
+                <th class="main">Puisto-sijoitus</th>
+                {% if viewmode == "0" %}
+                <th class="main">Sijoitus</th>
+                {% else %}
+                <th class="main">Ero kärkeen</th>
+                <th class="main">Ero P-Maniin</th>
+                {% endif %}
+                <th class="main">Osuusaika</th>
+                <th class="main">Osuus-puistosij.</th>
+                {% if viewmode == "0" %}
+                <th class="main">Osuus-sijoitus</th>
+                {% else %}
+                <th class="main">Onnistuminen</th>
+                <th class="main">Muutos kärkeen</th>
+                <th class="main">Pros. kärjestä</th>
+                <th class="main">Muutos P-Maniin</th>
+                <th class="main">Pros. P-Manista</th>
+                <th class="main">Kum. P-Man aika</th>
+                {% endif %}
+                <th class="main">Reitin nopein puistoaika</th>
+                {% if viewmode == "0" %}
+                <th class="main">Reitin nopein aika</th>
+                {% endif %}
+                <th class="main">Osuuden nopein puistoaika</th>
+                {% if viewmode == "0" %}
+                <th class="main">Osuuden nopein aika</th>
+                {% endif %}
+            </tr>
+            {% for visit in result.visit_set.all %}
+                {% with num=visit.ordernumber|add:"-1" %}
+                    {% if visit.leg_puistoposition == 1 %}
+                        <tr class="results best">
+                    {% else %}
+                        <tr class="results">
+                    {% endif %}
+                            <td class="main">{{ visit.ordernumber }}</td>
+                            {% if viewmode == "0" %}
+                            <td class="main">{{ visit.code }}</td>
+                            {% endif %}
+                            <td class="main">{{ visit.time|time_string }}</td>
+                            <td class="main">{{ visit.puistoposition }}</td>
+                            {% if viewmode == "0" %}
+                            <td class="main">{{ visit.position }}</td>
+                            {% else %}
+                            <td class="main">{{ visit.puistodiff_time_l|time_string }}</td>
+                            <td class="main">{{ visit.puistodiff_time_pm|time_string }}</td>
+                            {% endif %}
+                            <td class="main">{{ visit.leg_time|time_string }}</td>
+                            <td class="main">{{ visit.leg_puistoposition }}</td>
+                            {% if viewmode == "0" %}
+                            <td class="main">{{ visit.leg_position }}</td>
+                            {% else %}
+                            <td class="main strong">{{ visit.puisto_success|perc_string }}</td>
+                            <td class="main">{{ visit.leg_puistodiff_time_l|time_string }}</td>
+                            <td class="main">{{ visit.leg_puistoperc_time_l|perc_string }}</td>
+                            <td class="main">{{ visit.leg_puistodiff_time_pm|time_string }}</td>
+                            <td class="main">{{ visit.leg_puistoperc_time_pm|perc_string }}</td>
+                            <td class="main">{{ visit.coursecontrol.puistoman_time|time_string }}</td>
+                            {% endif %}
+                            <td class="main">{{ visit.coursecontrol.min_puistotime|time_string }}</td>
+                            {% if viewmode == "0" %}
+                            <td class="main">{{ visit.coursecontrol.min_time|time_string }}</td>
+                            {% endif %}
+                            <td class="main">{{ visit.coursecontrol.leg_min_puistotime|time_string }}</td>
+                            {% if viewmode == "0" %}
+                            <td class="main">{{ visit.coursecontrol.leg_min_time|time_string }}</td>
+                            {% endif %}
+                        </tr>
+                {% endwith %}
+            {% endfor %}
+        {% endwith %}
+    </table>
+</div>
+<br />
+<div class="race-details">
+    <table class="course main">
+        <tr><td class="main">Osallistujamäärä</td>
+        <td class="main">{{ result.course.num_participants }}</td></tr>
+        <tr><td class="main">Radan nopein aika</td>
+        <td class="main">{{ result.course.min_time|time_string }}</td></tr>
+        <tr><td class="main">Radan keskiaika</td>
+        <td class="main">{{ result.course.mean_time|time_string }}</td></tr>
+        <tr><td class="main">Puistomanin aika</td>
+        <td class="main">{{ result.course.puistoman_time|time_string }}</td></tr>
+        <tr><td class="main">Radan nopein aika (Puisto)</td>
+        <td class="main">{{ result.course.min_puistotime|time_string }}</td></tr>
+        <tr><td class="main">Radan keskiaika (Puisto)</td>
+        <td class="main">{{ result.course.mean_puistotime|time_string }}</td></tr>
+    </table>
+</div>
+{% endblock %}

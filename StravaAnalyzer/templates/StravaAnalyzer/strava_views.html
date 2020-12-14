@@ -1,0 +1,63 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load static %}
+
+{# By Riku 2019-04-24 #}
+
+<div>
+    <h2>Strava-yhteenvedot</h2>
+</div>
+<div>
+    <table class="profile large">
+        <tr class="profile large">
+            <th class="profile large">
+                <a href="{% url 'summaryreport_annual' %}">
+                    <img class="icon" src="{% static "img/statistics.svg" %}" alt="Vuosiyhteenveto" />
+                </a>
+            </th>
+            <td class="profile large">
+                <a class="profile large" href="{% url 'summaryreport_annual' %}">
+                    Vuosiyhteenveto
+                </a>
+            </td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">
+                <a href="{% url 'summaryreport_quarterly' %}">
+                    <img class="icon" src="{% static "img/statistics.svg" %}" alt="Kvartaaliyhteenveto" />
+                </a>
+            </th>
+            <td class="profile large">
+                <a class="profile large" href="{% url 'summaryreport_quarterly' %}">
+                    Kvartaaliyhteenveto
+                </a>
+            </td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">
+                <a href="{% url 'summaryreport_monthly' %}">
+                    <img class="icon" src="{% static "img/statistics.svg" %}" alt="Kuukausiyhteenveto" />
+                </a>
+            </th>
+            <td class="profile large">
+                <a class="profile large" href="{% url 'summaryreport_monthly' %}">
+                    Kuukausiyhteenveto
+                </a>
+            </td>
+        </tr>
+        <tr class="profile large">
+            <th class="profile large">
+                <a href="{% url 'summaryreport_weekly' %}">
+                    <img class="icon" src="{% static "img/statistics.svg" %}" alt="Viikkoyhteenveto" />
+                </a>
+            </th>
+            <td class="profile large">
+                <a class="profile large" href="{% url 'summaryreport_weekly' %}">
+                    Viikkoyhteenveto
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}

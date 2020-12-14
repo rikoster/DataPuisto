@@ -1,0 +1,75 @@
+﻿{% extends "NavigantAnalyzer/layout.html" %}
+{% block content %}
+{% load datapuisto_extras %}
+
+{# By Riku 2019-04-29 #}
+
+<h2>Aktiviteetit</h2>
+{% if request.GET.athlete %}
+    <h4>Urheilija: {{ athlete_name }}</h4>
+{% endif %}
+{% if request.GET.type and request.GET.type != 'Total' %}
+    <h4>Laji: {{ request.GET.type }}</h4>
+{% else %}
+    <h4>Kaikki lajit</h4>
+{% endif %}
+<h4>{{ request.GET.start }} - {{ request.GET.end }}</h4>
+
+{% if activity_list %}
+    <table class="activities">
+        <tr>
+            <th class="center">Pvm.</th>
+            {% if not request.GET.athlete %}
+                <th class="center">Urheilija</th>
+            {% endif %}
+            {% if not request.GET.type or request.GET.type == 'Total' %}
+                <th class="center">Laji</th>
+            {% endif %}
+            <th class="left">Nimi</th>
+            <th class="center">Kesto</th>
+            <th class="center">Matka</th>
+        </tr>
+        {% for activity in activity_list %}
+        <tr>
+            <td class="activities center">{{ activity.start_date|date:"Y-m-d H:i" }}</td>
+            {% if not request.GET.athlete %}
+                <td class="activities center">{{ activity.athlete.firstname }} {{ activity.athlete.lastname }}</td>
+            {% endif %}
+            {% if not request.GET.type or request.GET.type == 'Total' %}
+                <td class="activities center">{{ activity.type }}</td>
+            {% endif %}
+            <td class="activities left"><a href="https://www.strava.com/activities/{{ activity.id }}">{{ activity.name }}</a></td>
+            <td class="activities center">{{ activity.elapsed_time|time_string }}</td>
+            <td class="activities center">{{ activity.distance|in_km }}</td>
+        </tr>
+        {% endfor %}
+        <tr><td>&nbsp;</td></tr>
+    </table>
+    {% if is_paginated %}
+    <table class="pagination">
+        <tr>
+            {% if page_obj.has_previous %}
+            <td>
+                <a href="?{{ request.GET.urlencode }}&page={{ page_obj.previous_page_number }}">
+                    edellinen
+                </a>
+            </td>
+            {% endif %}
+            <td class="page_current">
+                sivu {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            </td>
+            {% if page_obj.has_next %}
+            <td>
+                <a href="?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}">
+                    seuraava
+                </a>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
+    {% endif %}
+    {% else %}
+        <p>Ei aktiviteetteja.</p>
+    {% endif %}
+
+{% endblock %}

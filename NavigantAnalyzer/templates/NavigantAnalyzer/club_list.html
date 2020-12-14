@@ -1,0 +1,14 @@
+﻿{% block content %}
+  <h1>Club List</h1>
+  {% if club_list %}
+  <ul>
+    {% for club in club_list %}
+      <li>
+          {{club.name}}
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no clubs in the library.</p>
+  {% endif %}       
+{% endblock %}
